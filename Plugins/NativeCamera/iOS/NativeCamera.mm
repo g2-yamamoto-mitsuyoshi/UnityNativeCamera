@@ -3,6 +3,7 @@
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "LEMirroredImagePicker.h"
 
 #ifdef UNITY_4_0 || UNITY_5_0
 #import "iPhone_View.h"
@@ -29,6 +30,7 @@ static NSString *pickedMediaSavePath;
 static UIImagePickerController *imagePicker;
 static int cameraMaxImageSize = -1;
 static int imagePickerState = 0; // 0 -> none, 1 -> showing, 2 -> finished
+static LEMirroredImagePicker *mirrorFrontPicker;
 
 // Credit: https://stackoverflow.com/a/20464727/2373034
 + (int)checkPermission {
@@ -142,7 +144,10 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing, 2 -> finished
 		imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
 	else if (defaultCamera == 1 && [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront])
 		imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-	
+    
+    mirrorFrontPicker = [[LEMirroredImagePicker alloc] initWithImagePicker:imagePicker];
+    [mirrorFrontPicker mirrorFrontCamera];
+    	
 	pickedMediaSavePath = imageSavePath;
 	cameraMaxImageSize = maxImageSize;
 	
